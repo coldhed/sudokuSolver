@@ -1,0 +1,63 @@
+only one solver class
+
+when state changes to 'play':   DONE
+    start a thread which looks solutions in that current setup:
+        wait until it receives a first solution in order to make sure its solvable 
+
+    store solutions in the solver class (outside the thread)
+    
+    when it finishes looking solutions:
+        notify solver class
+        end
+
+when analysing a move: DONE
+
+    ONLY DO THIS IF THERE ARE MORE THAN ONE SOLUTIONS
+
+    look for a setup where that is the move:
+        if found then eliminate other incompatible solutions. set self.map to current setup
+
+        if not found:
+            if thread has finished looking for solutions its a wrong move
+            else if thread has not finished looking for solutions then: 
+                if possible pause the other thread
+
+                look if that setup has a solution:
+                    if it does then eliminate other incompatible solutions. set self.map to current setup
+                    if it doesn't then it's incorrect
+
+                resume the other thread
+
+
+###############################################################################################################
+
+
+solver has to:
+ - manage the searcher thread and store the answers: DONE
+    - evaluate if a set-up is solvable DONE
+
+    - with the answers from the searcher thread evaluate a solution: DONE
+        - if necessary delete incompatible solutions with current set up DONE
+
+ - evaluate a single solution DONE
+ - if solve button is clicked then manage the show_solve thread 
+    - stop the searcher thread
+
+searcher thread has to:
+ - create a possibilities map   DONE | it's actually sent by the solver object
+ - look for solutions using the possible numbers in each square | DONE
+ - send solutions whenever it founds one | DONE
+ - notify when it ends | DONE
+
+ show_solve thread has to:  TODO / create a showing_solve state
+ - follow the normal solve process of a solve:
+    - sleep or wait each time a number is changed in the puzzle
+    - notify solver in which step it is (contraint propagation / DFS)
+
+
+
+IF SHOW THREAD DOESN'T GIVE FULL STATUS IT MIGHT BE THAT THE CHANNEL IS FULL AND IT DIDNT PULL THE LAST ONE
+
+
+
+
